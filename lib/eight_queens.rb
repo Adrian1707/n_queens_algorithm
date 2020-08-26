@@ -1,31 +1,33 @@
-require 'byebug'
 class EightQueens
   attr_accessor :board, :size
   def initialize(size)
     @board = create_board(size)
-    @new_board = create_board(size)
     @size = size
+    @backtracks = 0
   end
-  [
-    [1,0,0,0],
-    [0,0,1,0],
-    [0,0,0,0],
-    [0,0,0,0]
-  ]
-  def solve
-    board.map!.with_index do |row, row_index|
+
+  def solve(row_number = 0)
+    board.map.with_index do |row, row_index|
       row.map.with_index do |cell, column_index|
-        if valid_move?(row_index, column_index)
-          row[column_index] = 1
-        else
-          row[column_index] = 0
+        if board[row_number][column_index] == 1
+          board[row_number][column_index] = 0
+          next
+        end
+
+        if valid_move?(row_number, column_index)
+          board[row_number][column_index] = 1
         end
       end
+
+      solve(row_number - 1) if queen_cannot_be_placed?(row_number)
+      return board if board.flatten.sum == size
+
+      row_number += 1
     end
   end
 
-  def queen_cannot_be_placed?(new_row)
-    new_row.sum == 0
+  def queen_cannot_be_placed?(row_number)
+    board[row_number].sum == 0
   end
 
   def valid_move?(row_index, column_index)
@@ -42,8 +44,6 @@ class EightQueens
 
   def valid_column?(column_index)
     board.transpose[column_index].sum == 0
-  # rescue
-  #   byebug
   end
 
   def valid_diagonal?(row_index, column_index)
@@ -89,6 +89,6 @@ class EightQueens
   end
 
   def create_board(size)
-    Array.new(size, Array.new(size, 0))
+    Array.new(size) { Array.new(size, 0) }
   end
 end

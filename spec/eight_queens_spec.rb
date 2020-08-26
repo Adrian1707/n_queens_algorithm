@@ -30,21 +30,23 @@ describe EightQueens do
           ]
         )
       end
+    end
 
-      it 'returns a grid with 3 placed queens that cannot attack each other' do
+    context 'when the size is a 8x8' do
+      let(:size) { 8 }
+      it 'returns a grid with 8 placed queens that cannot attack each other' do
         expect(subject.solve).to eq(
           [
-            [1,0,0,0],
-            [0,0,1,0],
-            [0,0,0,0],
-            [0,1,0,0]
+            [1, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 1],
+            [0, 0, 0, 0, 0, 1, 0, 0],
+            [0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1, 0],
+            [0, 1, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0, 0, 0]
           ]
         )
-      end
-
-      xit 'sums the flattened board to the size provided on initialization' do
-        subject.solve
-        expect(subject.board.flatten.sum).to eq(4)
       end
     end
   end
