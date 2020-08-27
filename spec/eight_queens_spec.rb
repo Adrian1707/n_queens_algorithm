@@ -51,34 +51,34 @@ describe EightQueens do
     end
   end
 
-  describe '#valid_move?' do
+  describe '#queen_can_be_placed?' do
     let(:board) {
       Array.new(size, Array.new(size, 0))
     }
     context 'when the move is valid for all directions' do
       it 'returns true' do
-        expect(subject.valid_move?(1,1)).to eq(true)
+        expect(subject.queen_can_be_placed?(1,1)).to eq(true)
       end
     end
 
     context 'when the move is invalid on the row' do
       it 'returns false' do
         subject.board[0] = [1,0,0,0]
-        expect(subject.valid_move?(0,3)).to eq(false)
+        expect(subject.queen_can_be_placed?(0,3)).to eq(false)
       end
     end
 
     context 'when the move is invalid on the column' do
       it 'returns false' do
         subject.board[0] = [1,0,0,0]
-        expect(subject.valid_move?(3,0)).to eq(false)
+        expect(subject.queen_can_be_placed?(3,0)).to eq(false)
       end
     end
 
     context 'when the move is invalid diagonally' do
       it 'returns false' do
         subject.board[0] = [1,0,0,0]
-        expect(subject.valid_move?(1,1)).to eq(false)
+        expect(subject.queen_can_be_placed?(1,1)).to eq(false)
       end
     end
   end

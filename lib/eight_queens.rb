@@ -1,26 +1,22 @@
 class EightQueens
   attr_accessor :board, :size
   def initialize(size)
-    @board = create_board(size)
     @size = size
-    @backtracks = 0
+    @board = Array.new(size) { Array.new(size, 0) }
   end
 
   def solve(row_number = 0)
-    board.map.with_index do |row, row_index|
-      row.map.with_index do |cell, column_index|
-        if board[row_number][column_index] == 1
-          board[row_number][column_index] = 0
+    board.map do |row|
+      row.map.with_index do |_, column_index|
+        if queen_is_placed?(row_number, column_index)
+          remove_queen(row_number, column_index)
           next
         end
-
-        if valid_move?(row_number, column_index)
-          board[row_number][column_index] = 1
-        end
+        place_queen(row_number, column_index)
       end
 
       solve(row_number - 1) if queen_cannot_be_placed?(row_number)
-      return board if board.flatten.sum == size
+      return board if all_queens_are_placed?
 
       row_number += 1
     end
@@ -30,7 +26,25 @@ class EightQueens
     board[row_number].sum == 0
   end
 
-  def valid_move?(row_index, column_index)
+  def all_queens_are_placed?
+    board.flatten.sum == size
+  end
+
+  def place_queen(row_number, column_index)
+    if queen_can_be_placed?(row_number, column_index)
+      board[row_number][column_index] = 1
+    end
+  end
+
+  def remove_queen(row_number, column_index)
+    board[row_number][column_index] = 0
+  end
+
+  def queen_is_placed?(row_number, column_index)
+    board[row_number][column_index] == 1
+  end
+
+  def queen_can_be_placed?(row_index, column_index)
     [
       valid_row?(row_index),
       valid_column?(column_index),
@@ -51,14 +65,13 @@ class EightQueens
   end
 
   def check_diagonals?(row_index, column_index)
-    up_left = check_diagonals_up_left(row_index, column_index)
-    up_right = check_diagonals_up_right(row_index, column_index)
-    down_left = check_diagonals_down_left(row_index, column_index)
-    down_right = check_diagonals_down_right(row_index, column_index)
-    [up_left, up_right, down_left, down_right].all? {|sum| sum == 0}
+    [
+      check_diagonals_up_left(row_index, column_index),
+      check_diagonals_up_right(row_index, column_index),
+      check_diagonals_down_left(row_index, column_index),
+      check_diagonals_down_right(row_index, column_index)
+    ].all? {|sum| sum == 0}
   end
-
-  private
 
   def check_diagonals_up_left(row_index, column_index)
     return 0 if row_index < 0 || column_index < 0
@@ -86,9 +99,5 @@ class EightQueens
 
     cell = board[row_index][column_index]
     cell + check_diagonals_down_right(row_index+1, column_index + 1)
-  end
-
-  def create_board(size)
-    Array.new(size) { Array.new(size, 0) }
   end
 end
